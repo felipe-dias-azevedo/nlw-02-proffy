@@ -1,33 +1,50 @@
 import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
 import './styles.css'
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    subject: string;
+    cost: number;
+    name: string;
+    avatar: string;
+    whatsapp: string;
+    bio: string;
+};
+
+interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({teacher}) => {
+    function createNewConnection() {
+        api.post('/connections', {
+            user_id: teacher.id
+        })
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://avatars1.githubusercontent.com/u/61800414?s=400&u=9abfa2d5a106fdcab0b0f631817e04e218ddee2e&v=4" alt="Felipe Azevedo" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>Felipe Azevedo</strong>
-                    <span>Fisíca</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>
-                Entusiasta das melhores tecnologias de física avançada.
-                        <br /><br />
-                        Apaixonado por explorar coisas novas e por mudar a vida das pessoas através de experiências. Mais de 1.000.000 pessoas já tiveram a experiência de uma aula minha.
-                    </p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/hora
-                            <strong>R$ 100,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a target="_blank" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}>
                     <img src={whatsappIcon} alt="Whatsapp logo" />
                             Entrar em contanto
-                        </button>
+                        </a>
             </footer>
         </article>
     )
